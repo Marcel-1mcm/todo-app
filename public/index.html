@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker To-Do App</title>
+</head>
+<body>
+    <h2>To-Do List</h2>
+    <ul id="todo-list"></ul>
+    <input type="text" id="todo-input" placeholder="New Task">
+    <button onclick="addTodo()">Add</button>
+
+    <script>
+        async function fetchTodos() {
+            const res = await fetch("http://localhost:3000/todos");
+            const todos = await res.json();
+            document.getElementById("todo-list").innerHTML = todos.map(todo => `<li>${todo}</li>`).join("");
+        }
+
+        async function addTodo() {
+            const newTodo = document.getElementById("todo-input").value;
+            await fetch("http://localhost:3000/todos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ todo: newTodo })
+            });
+            fetchTodos();
+        }
+
+        fetchTodos();
+    </script>
+</body>
+</html>
